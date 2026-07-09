@@ -1,27 +1,18 @@
 // ===== تنظیمات =====
 const JSON_URL = 'sites.json';
-const CHECK_INTERVAL = 60000; // 60 ثانیه
+const CHECK_INTERVAL = 30000;
+const TIMEOUT = 3000;
 
-// ===== متغیرها =====
 let sites = [];
 let statusCache = {};
 let isChecking = false;
 
-// ===== بارگذاری سایت‌ها از JSON =====
 async function loadSites() {
     try {
         const response = await fetch(JSON_URL + '?t=' + Date.now());
         if (!response.ok) throw new Error('فایل JSON پیدا نشد');
         sites = await response.json();
-        
-        // اگر سایت‌ها قبلاً چک نشده بودن، چک کن
-        if (Object.keys(statusCache).length === 0) {
-            await checkAllSites();
-        } else {
-            renderSites();
-            updateOverallStatus();
-            updateLastUpdate();
-        }
+        await checkAllSites();
     } catch (error) {
         console.error('خطا:', error);
         document.getElementById('sitesList').innerHTML = `
@@ -34,79 +25,57 @@ async function loadSites() {
     }
 }
 
-// ===== تابع بروزرسانی (همون دکمه) =====
-async function refreshAll() {
-    // جلوگیری از چندبار کلیک
+window.refreshAll = async function() {
     if (isChecking) return;
-    
     const btn = document.getElementById('refreshBtn');
-    
-    // اضافه کردن کلاس لودینگ
     btn.classList.add('loading');
     btn.disabled = true;
-    
-    // چک کردن همه سایت‌ها
+    statusCache = {};
     await checkAllSites();
-    
-    // حذف کلاس لودینگ
     btn.classList.remove('loading');
     btn.disabled = false;
-}
+};
 
-// ===== چک کردن همه سایت‌ها =====
 async function checkAllSites() {
     if (!sites.length) {
         await loadSites();
         return;
     }
-
     isChecking = true;
-    
-    // اضافه کردن کلاس لودینگ به کارت‌ها
-    document.querySelectorAll('.site-card').forEach(card => {
-        card.classList.add('loading');
-    });
-
-    // چک کردن همه سایت‌ها به صورت موازی
-    const promises = sites.map(site => checkSite(site));
-    await Promise.all(promises);
-
-    // رندر کردن نتایج
     renderSites();
     updateOverallStatus();
     updateLastUpdate();
     
+    const promises = sites.map(site => checkSiteFast(site));
+    await Promise.allSettled(promises);
+    
+    renderSites();
+    updateOverallStatus();
+    updateLastUpdate();
     isChecking = false;
 }
 
-// ===== چک کردن یک سایت =====
-async function checkSite(site) {
+async function checkSiteFast(site) {
     const url = site.url;
     const key = url;
-
     try {
-        const startTime = Date.now();
-        
-        // استفاده از روش fetch با timeout
+        const startTime = performance.now();
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        
-        const response = await fetch(url, {
+        const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
+        await fetch(url, {
+            method: 'HEAD',
             mode: 'no-cors',
-            signal: controller.signal
+            signal: controller.signal,
+            cache: 'no-cache'
         });
-        
         clearTimeout(timeoutId);
-        const responseTime = Date.now() - startTime;
-        
-        // در mode:no-cors نمیشه وضعیت رو خوند، اما اگر خطا نده یعنی آنلاین
+        const responseTime = Math.round(performance.now() - startTime);
         statusCache[key] = {
             status: 'online',
             responseTime: responseTime,
             timestamp: Date.now()
         };
     } catch (error) {
-        // اگر خطا خورد (تایم‌اوت یا شبکه) یعنی آفلاین
         statusCache[key] = {
             status: 'offline',
             responseTime: null,
@@ -115,34 +84,33 @@ async function checkSite(site) {
     }
 }
 
-// ===== رندر کردن کارت‌ها =====
 function renderSites() {
     const container = document.getElementById('sitesList');
-    
     if (!sites.length) return;
-    
     let html = '';
     sites.forEach(site => {
         const key = site.url;
         const data = statusCache[key];
         const isOnline = data && data.status === 'online';
         const responseTime = data ? data.responseTime : null;
-        
-        // استخراج دامنه برای نمایش بهتر
         let displayUrl = site.url;
         try {
             const urlObj = new URL(site.url);
             displayUrl = urlObj.hostname;
         } catch (e) {}
-        
+        let timeColor = '#22c55e';
+        if (responseTime !== null) {
+            if (responseTime > 1000) timeColor = '#f59e0b';
+            if (responseTime > 2000) timeColor = '#ef4444';
+        }
         html += `
             <div class="site-card ${isOnline ? 'online' : 'offline'}">
                 <div class="info">
                     <span class="name">${site.name}</span>
                     <span class="url">${displayUrl}</span>
                     ${responseTime !== null ? 
-                        `<span class="response-time">⏱️ ${responseTime}ms</span>` : 
-                        `<span class="response-time offline">⏱️ زمان پاسخ نامشخص</span>`
+                        `<span class="response-time" style="color:${timeColor};">⚡ ${responseTime}ms</span>` : 
+                        `<span class="response-time offline">⏱️ نامشخص</span>`
                     }
                 </div>
                 <div class="status">
@@ -154,34 +122,38 @@ function renderSites() {
             </div>
         `;
     });
-    
     container.innerHTML = html;
 }
 
-// ===== بروزرسانی وضعیت کلی =====
 function updateOverallStatus() {
     if (!sites.length) return;
-    
     const total = sites.length;
     let online = 0;
-    
+    let totalTime = 0;
+    let timeCount = 0;
     sites.forEach(site => {
         const key = site.url;
-        if (statusCache[key] && statusCache[key].status === 'online') {
+        const data = statusCache[key];
+        if (data && data.status === 'online') {
             online++;
+            if (data.responseTime !== null) {
+                totalTime += data.responseTime;
+                timeCount++;
+            }
         }
     });
-    
     const container = document.getElementById('overallStatus');
     const icon = container.querySelector('.status-icon');
     const badge = container.querySelector('.status-badge');
-    
-    // حذف کلاس‌های قبلی
     container.classList.remove('all-online', 'all-offline', 'partial');
-    
+    let avgTime = '';
+    if (timeCount > 0) {
+        const avg = Math.round(totalTime / timeCount);
+        avgTime = ` | ⚡ میانگین: ${avg}ms`;
+    }
     if (online === total) {
         icon.textContent = '✅';
-        badge.textContent = 'همه سرویس‌ها آنلاین';
+        badge.textContent = `همه سرویس‌ها آنلاین ${avgTime}`;
         container.classList.add('all-online');
     } else if (online === 0) {
         icon.textContent = '❌';
@@ -189,12 +161,11 @@ function updateOverallStatus() {
         container.classList.add('all-offline');
     } else {
         icon.textContent = '⚠️';
-        badge.textContent = `${online} از ${total} سرویس آنلاین`;
+        badge.textContent = `${online} از ${total} سرویس آنلاین ${avgTime}`;
         container.classList.add('partial');
     }
 }
 
-// ===== بروزرسانی زمان آخرین چک =====
 function updateLastUpdate() {
     const now = new Date();
     const timeString = now.toLocaleString('fa-IR', {
@@ -205,17 +176,11 @@ function updateLastUpdate() {
     document.getElementById('lastUpdate').textContent = `آخرین بروزرسانی: ${timeString}`;
 }
 
-// ===== بارگذاری اولیه =====
 document.addEventListener('DOMContentLoaded', () => {
     loadSites();
-    
-    // چک کردن خودکار هر ۶۰ ثانیه
     setInterval(() => {
         if (!isChecking) {
             checkAllSites();
         }
     }, CHECK_INTERVAL);
 });
-
-// ===== رفرش دکمه رو به صورت گلوبال تعریف می‌کنیم =====
-window.refreshAll = refreshAll;
