@@ -1,0 +1,183 @@
+/* ریست کلی */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 1100px;
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+/* هدر */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 28px;
+    color: #1a1a2e;
+}
+
+header p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+#refreshBtn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#refreshBtn:hover {
+    background: #0056b3;
+    transform: scale(1.03);
+}
+
+/* وضعیت کلی */
+.overall-status {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    text-align: center;
+    border-right: 5px solid #28a745;
+}
+
+.status-badge {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* گرید سایت‌ها */
+.sites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* کارت هر سایت */
+.site-card {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+    border-right: 5px solid #28a745;
+}
+
+.site-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.site-card.offline {
+    border-right-color: #dc3545;
+    background: #fff5f5;
+}
+
+.site-card .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.site-card .name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.site-card .url {
+    font-size: 13px;
+    color: #6c757d;
+    word-break: break-all;
+}
+
+.site-card .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.online {
+    background: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+}
+
+.status-dot.offline {
+    background: #dc3545;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+
+.status-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-text.online {
+    color: #28a745;
+}
+
+.status-text.offline {
+    color: #dc3545;
+}
+
+/* پاسخگویی */
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .sites-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* فوتر */
+footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #e9ecef;
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+}
