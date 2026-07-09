@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>وضعیت سرویس‌ها | Status Page</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="container">
+        <!-- هدر -->
+        <header>
+            <h1>📊 وضعیت سرویس‌های ما</h1>
+            <p id="lastUpdate">آخرین بروزرسانی: در حال بارگذاری...</p>
+            <button id="refreshBtn" onclick="checkAllSites()">🔄 بروزرسانی</button>
+        </header>
+
+        <!-- کارت وضعیت کلی -->
+        <div id="overallStatus" class="overall-status">
+            <span class="status-badge">✅ همه سرویس‌ها آنلاین</span>
+        </div>
+
+        <!-- لیست سایت‌ها -->
+        <div id="sitesList" class="sites-grid">
+            <!-- توسط جاوااسکریپت پر می‌شه -->
+        </div>
+
+        <!-- فوتر -->
+        <footer>
+            <p>ساخته شده با ❤️ | داده‌ها از فایل JSON محلی</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
