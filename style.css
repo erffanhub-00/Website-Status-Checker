@@ -20,13 +20,11 @@ body {
 .container {
     max-width: 1100px;
     width: 100%;
-    background: linear-gradient(145deg, #131b2e, #0d1524);
+    background: #131b2e;
     border-radius: 24px;
     padding: 35px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(10px);
 }
 
 /* ===== هدر ===== */
@@ -44,10 +42,8 @@ header {
 .header-left h1 {
     font-size: 26px;
     font-weight: 700;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #60a5fa;
+    /* گرادیانت رو حذف کردم برای جلوگیری از خطا */
 }
 
 .header-left p {
@@ -58,7 +54,7 @@ header {
 
 /* ===== دکمه بروزرسانی ===== */
 #refreshBtn {
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: #2563eb;
     color: white;
     border: none;
     padding: 12px 28px;
@@ -71,29 +67,12 @@ header {
     gap: 10px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-#refreshBtn::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s;
-}
-
-#refreshBtn:hover::before {
-    opacity: 1;
 }
 
 #refreshBtn:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px);
     box-shadow: 0 6px 30px rgba(37, 99, 235, 0.5);
+    background: #3b82f6;
 }
 
 #refreshBtn:active {
@@ -108,6 +87,7 @@ header {
 
 .btn-icon {
     font-size: 18px;
+    display: inline-block;
     transition: transform 0.6s ease;
 }
 
@@ -116,7 +96,8 @@ header {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* ===== وضعیت کلی ===== */
@@ -129,7 +110,6 @@ header {
     align-items: center;
     gap: 14px;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(5px);
 }
 
 .status-icon {
@@ -357,5 +337,5 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #7c3aed;
+    background: #3b82f6;
 }
