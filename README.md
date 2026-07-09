@@ -24,7 +24,7 @@
 ## 🚀 اجرا
 
 ```bash
-git clone https://github.com/[username]/status-page.git
+git clone https://github.com/erffanhub-00/status-page.git
 cd status-page
 ```
 
@@ -53,4 +53,4 @@ status-page/
 ## 👨‍💻 توسعه‌دهنده
 
 [erffanhub-00](https://github.com/erffanhub-00)
----
+
