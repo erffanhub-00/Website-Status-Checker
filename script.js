@@ -14,7 +14,6 @@ async function loadSites() {
         if (!response.ok) throw new Error('فایل JSON پیدا نشد');
         sites = await response.json();
         
-        // اگر سایت‌ها قبلاً چک نشده بودن، چک کن
         if (Object.keys(statusCache).length === 0) {
             await checkAllSites();
         } else {
@@ -34,21 +33,16 @@ async function loadSites() {
     }
 }
 
-// ===== تابع بروزرسانی (همون دکمه) =====
+// ===== تابع بروزرسانی (دکمه) =====
 async function refreshAll() {
-    // جلوگیری از چندبار کلیک
     if (isChecking) return;
     
     const btn = document.getElementById('refreshBtn');
-    
-    // اضافه کردن کلاس لودینگ
     btn.classList.add('loading');
     btn.disabled = true;
     
-    // چک کردن همه سایت‌ها
     await checkAllSites();
     
-    // حذف کلاس لودینگ
     btn.classList.remove('loading');
     btn.disabled = false;
 }
@@ -62,16 +56,14 @@ async function checkAllSites() {
 
     isChecking = true;
     
-    // اضافه کردن کلاس لودینگ به کارت‌ها
     document.querySelectorAll('.site-card').forEach(card => {
         card.classList.add('loading');
     });
 
-    // چک کردن همه سایت‌ها به صورت موازی
+    // چک کردن همه سایت‌ها با Promise.all
     const promises = sites.map(site => checkSite(site));
-    await Promise.all(promises);
+    await Promise.allSettled(promises); // استفاده از allSettled به جای all
 
-    // رندر کردن نتایج
     renderSites();
     updateOverallStatus();
     updateLastUpdate();
@@ -79,7 +71,7 @@ async function checkAllSites() {
     isChecking = false;
 }
 
-// ===== چک کردن یک سایت =====
+// ===== چک کردن یک سایت (نسخه‌ی بدون خطا) =====
 async function checkSite(site) {
     const url = site.url;
     const key = url;
@@ -87,26 +79,21 @@ async function checkSite(site) {
     try {
         const startTime = Date.now();
         
-        // استفاده از روش fetch با timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        
+        // روش ساده‌تر و بدون AbortController
         const response = await fetch(url, {
             mode: 'no-cors',
-            signal: controller.signal
+            // حذف signal برای جلوگیری از خطای cancellation
         });
         
-        clearTimeout(timeoutId);
         const responseTime = Date.now() - startTime;
         
-        // در mode:no-cors نمیشه وضعیت رو خوند، اما اگر خطا نده یعنی آنلاین
         statusCache[key] = {
             status: 'online',
             responseTime: responseTime,
             timestamp: Date.now()
         };
     } catch (error) {
-        // اگر خطا خورد (تایم‌اوت یا شبکه) یعنی آفلاین
+        // هر خطایی یعنی سایت آفلاین یا inaccessible
         statusCache[key] = {
             status: 'offline',
             responseTime: null,
@@ -128,7 +115,6 @@ function renderSites() {
         const isOnline = data && data.status === 'online';
         const responseTime = data ? data.responseTime : null;
         
-        // استخراج دامنه برای نمایش بهتر
         let displayUrl = site.url;
         try {
             const urlObj = new URL(site.url);
@@ -176,7 +162,6 @@ function updateOverallStatus() {
     const icon = container.querySelector('.status-icon');
     const badge = container.querySelector('.status-badge');
     
-    // حذف کلاس‌های قبلی
     container.classList.remove('all-online', 'all-offline', 'partial');
     
     if (online === total) {
@@ -209,7 +194,6 @@ function updateLastUpdate() {
 document.addEventListener('DOMContentLoaded', () => {
     loadSites();
     
-    // چک کردن خودکار هر ۶۰ ثانیه
     setInterval(() => {
         if (!isChecking) {
             checkAllSites();
@@ -217,5 +201,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }, CHECK_INTERVAL);
 });
 
-// ===== رفرش دکمه رو به صورت گلوبال تعریف می‌کنیم =====
+// ===== رفرش دکمه رو به صورت گلوبال =====
 window.refreshAll = refreshAll;
