@@ -52,5 +52,5 @@ status-page/
 
 ## 👨‍💻 توسعه‌دهنده
 
-[نام شما](https://github.com/[erffanhub-00])
+[erffanhub-00](https://github.com/erffanhub-00)
 ---
