@@ -1,4 +1,4 @@
-/* ریست کلی */
+/* ===== ریست و تنظیمات پایه ===== */
 * {
     margin: 0;
     padding: 0;
@@ -7,177 +7,355 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0f2f5;
-    color: #1a1a2e;
-    padding: 20px;
+    background: #0a0e17;
+    color: #e0e6ed;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
+/* ===== کانتینر اصلی ===== */
 .container {
     max-width: 1100px;
     width: 100%;
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    background: linear-gradient(145deg, #131b2e, #0d1524);
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
 }
 
-/* هدر */
+/* ===== هدر ===== */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    border-bottom: 2px solid #e9ecef;
+    gap: 15px;
     padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     margin-bottom: 25px;
 }
 
-header h1 {
-    font-size: 28px;
-    color: #1a1a2e;
+.header-left h1 {
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-header p {
-    color: #6c757d;
-    font-size: 14px;
+.header-left p {
+    color: #8892a8;
+    font-size: 13px;
+    margin-top: 4px;
 }
 
+/* ===== دکمه بروزرسانی ===== */
 #refreshBtn {
-    background: #007bff;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
     color: white;
     border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+#refreshBtn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+#refreshBtn:hover::before {
+    opacity: 1;
 }
 
 #refreshBtn:hover {
-    background: #0056b3;
-    transform: scale(1.03);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 30px rgba(37, 99, 235, 0.5);
 }
 
-/* وضعیت کلی */
+#refreshBtn:active {
+    transform: scale(0.95);
+}
+
+#refreshBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-icon {
+    font-size: 18px;
+    transition: transform 0.6s ease;
+}
+
+#refreshBtn.loading .btn-icon {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== وضعیت کلی ===== */
 .overall-status {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 18px 25px;
     margin-bottom: 30px;
-    text-align: center;
-    border-right: 5px solid #28a745;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(5px);
+}
+
+.status-icon {
+    font-size: 24px;
 }
 
 .status-badge {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 600;
+    color: #e0e6ed;
 }
 
-/* گرید سایت‌ها */
+/* وضعیت‌های مختلف */
+.overall-status.all-online {
+    border-right: 4px solid #22c55e;
+    background: rgba(34, 197, 94, 0.05);
+}
+
+.overall-status.all-offline {
+    border-right: 4px solid #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.overall-status.partial {
+    border-right: 4px solid #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+/* ===== گرید کارت‌ها ===== */
 .sites-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 16px;
 }
 
-/* کارت هر سایت */
+/* ===== کارت هر سایت ===== */
 .site-card {
-    background: #f8f9fa;
-    border-radius: 14px;
-    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 18px 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.3s;
-    border-right: 5px solid #28a745;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.site-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.site-card.online::before {
+    background: #22c55e;
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.site-card.offline::before {
+    background: #ef4444;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
 
 .site-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-}
-
-.site-card.offline {
-    border-right-color: #dc3545;
-    background: #fff5f5;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .site-card .info {
     display: flex;
     flex-direction: column;
+    gap: 2px;
+    flex: 1;
 }
 
 .site-card .name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: #1a1a2e;
+    color: #e0e6ed;
 }
 
 .site-card .url {
-    font-size: 13px;
-    color: #6c757d;
+    font-size: 12px;
+    color: #64748b;
     word-break: break-all;
+}
+
+.site-card .response-time {
+    font-size: 11px;
+    color: #22c55e;
+    margin-top: 3px;
+    font-weight: 500;
+}
+
+.site-card .response-time.offline {
+    color: #ef4444;
 }
 
 .site-card .status {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-right: 10px;
 }
 
+/* دایره وضعیت */
 .status-dot {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     display: inline-block;
+    transition: all 0.3s;
 }
 
 .status-dot.online {
-    background: #28a745;
-    box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+    background: #22c55e;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+    animation: pulse-green 2s infinite;
 }
 
 .status-dot.offline {
-    background: #dc3545;
-    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+    background: #ef4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-green {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes pulse-red {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 .status-text {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
 }
 
 .status-text.online {
-    color: #28a745;
+    color: #22c55e;
 }
 
 .status-text.offline {
-    color: #dc3545;
+    color: #ef4444;
 }
 
-/* پاسخگویی */
+/* ===== حالت لودینگ کارت‌ها ===== */
+.site-card.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.site-card.loading .status-dot {
+    animation: pulse-gray 0.8s infinite;
+}
+
+@keyframes pulse-gray {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* ===== فوتر ===== */
+footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+    color: #475569;
+    font-size: 13px;
+}
+
+/* ===== پاسخگویی ===== */
 @media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
     header {
         flex-direction: column;
         text-align: center;
-        gap: 10px;
+    }
+
+    .header-left h1 {
+        font-size: 22px;
+    }
+
+    #refreshBtn {
+        width: 100%;
+        justify-content: center;
     }
 
     .sites-grid {
         grid-template-columns: 1fr;
     }
+
+    .site-card {
+        padding: 15px 18px;
+    }
 }
 
-/* فوتر */
-footer {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid #e9ecef;
-    text-align: center;
-    color: #6c757d;
-    font-size: 14px;
+/* ===== اسکرول بار زیبا ===== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0e17;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7c3aed;
 }
