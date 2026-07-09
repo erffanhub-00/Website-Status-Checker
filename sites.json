@@ -1,0 +1,22 @@
+[
+    {
+        "name": "گوگل",
+        "url": "https://www.google.com"
+    },
+    {
+        "name": "گیت‌هاب",
+        "url": "https://github.com"
+    },
+    {
+        "name": "یوتیوب",
+        "url": "https://www.youtube.com"
+    },
+    {
+        "name": "تلگرام",
+        "url": "https://web.telegram.org"
+    },
+    {
+        "name": "سایت شخصی من",
+        "url": "https://your-site.com"
+    }
+]
