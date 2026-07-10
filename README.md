@@ -57,8 +57,3 @@ status-page/
 ├── script.js
 └── sites.json
 ```
-
-## 👨‍💻 توسعه‌دهنده
-
-[erffanhub-00](https://github.com/erffanhub-00)
-
