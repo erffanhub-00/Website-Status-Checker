@@ -1,42 +1,46 @@
+# Website Status Checker — وضعیت سرویس‌ها
 
+یک صفحه استاتیک ساده برای بررسی لحظه‌ای در دسترس بودن سایت‌ها، بدون نیاز به سرور یا بک‌اند. لیست سایت‌ها در فایل `sites.json` نگه داشته می‌شود و صفحه هر ۳۰ ثانیه آن‌ها را بررسی می‌کند.
 
-# 📊 وضعیت سرویس‌ها
+## ویژگی‌ها
 
-> یه ابزار ساده برای بررسی لحظه‌ای آنلاین بودن سایت‌ها
+- بررسی در دسترس بودن با متد `HEAD` و تایم‌اوت ۳ ثانیه
+- نمایش زمان پاسخ به میلی‌ثانیه با رنگ‌بندی
+- بروزرسانی خودکار هر ۳۰ ثانیه + دکمه بروزرسانی دستی
+- حالت «در حال بررسی» برای هر سایت و برای وضعیت کلی، بدون فلش «همه آفلاین» در لود اول
+- اعتبارسنجی `sites.json` — ورودی‌های نامعتبر نادیده گرفته می‌شوند و هشدارشان نمایش داده می‌شود
+- تم دارک، راست‌چین و کاملاً واکنش‌گرا
 
-[![HTML](https://img.shields.io/badge/HTML-5-E34F26?style=flat&logo=html5)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS](https://img.shields.io/badge/CSS-3-1572B6?style=flat&logo=css3)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=flat&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+## نحوه کار
 
----
-## Me
-[![Telegram](https://img.shields.io/badge/Telegram-erffan__hub-blue?style=for-the-badge&logo=telegram)](https://t.me/erffan_hub)
-[![Twitter](https://img.shields.io/badge/Twitter-@Erffanhub__00-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Erffanhub_00)
-[![Gist](https://img.shields.io/badge/Gist-Profile-000000?style=for-the-badge&logo=github)](https://gist.github.com/erffanhub-00)
-[![Github](https://img.shields.io/badge/Github-Profile-000000?style=for-the-badge&logo=github)](https://github.com/erffanhub-00)
+برای هر سایت یک درخواست `HEAD` با `mode: 'no-cors'` فرستاده می‌شود. اگر سرور در سطح شبکه پاسخ بدهد، سایت «در دسترس» حساب می‌شود و زمان پاسخ ثبت می‌شود؛ اگر درخواست به تایم‌اوت بخورد یا خطای شبکه بدهد، «در دسترس نیست».
 
----
+یک محدودیت مهم: یک صفحه استاتیک نمی‌تواند کد وضعیت واقعی HTTP یک سایت دیگر را بخواند، چون پاسخ `no-cors` مبهم (opaque) است. یعنی سایتی که 404 یا 500 برمی‌گرداند ولی سرورش بالا است، اینجا «در دسترس» دیده می‌شود. برای تشخیص کد وضعیت واقعی، به یک سرور یا پروکسی نیاز است — این ابزار آگاهانه فقط در دسترس بودن در سطح شبکه را نشان می‌دهد.
 
-
-## ✨ ویژگی‌ها
-
-- ⚡ بررسی لحظه‌ای با متد `HEAD`
-- 🎨 تم دارک حرفه‌ای
-- 🔄 بروزرسانی خودکار هر ۳۰ ثانیه
-- ⏱️ نمایش زمان پاسخ به میلی‌ثانیه
-- 📱 کاملاً واکنش‌گرا
-- 🎯 مدیریت سایت‌ها با فایل JSON
-
----
-
-## 🚀 اجرا
+## اجرا
 
 ```bash
-git clone https://github.com/erffanhub-00/status-page.git
-cd status-page
+git clone https://github.com/erffanhub-00/Website-Status-Checker.git
+cd Website-Status-Checker
 ```
 
-فایل `sites.json` رو ویرایش کن:
+این صفحه باید از طریق یک سرور HTTP سرو شود؛ باز کردن مستقیم فایل (`file://`) کار نمی‌کند چون مرورگر جلوی `fetch('sites.json')` را می‌گیرد.
+
+```bash
+# با پایتون
+python3 -m http.server 8000
+
+# یا با npx
+npx serve .
+```
+
+بعد مرورگر را روی `http://localhost:8000` باز کنید.
+
+برای انتشار آنلاین، می‌توانید از GitHub Pages استفاده کنید: در تنظیمات ریپو، بخش Pages را روی شاخه `main` فعال کنید.
+
+## افزودن سایت
+
+فایل `sites.json` را ویرایش کنید. هر ورودی یک نام و یک آدرس `http` یا `https` می‌خواهد:
 
 ```json
 [
@@ -45,15 +49,29 @@ cd status-page
 ]
 ```
 
+ورودی بدون نام، با آدرس نامعتبر، یا با پروتکل غیر از `http`/`https` نادیده گرفته می‌شود و تعدادشان بالای لیست نمایش داده می‌شود.
 
-
-
-## 📁 ساختار
+## ساختار پروژه
 
 ```
-status-page/
-├── index.html
-├── style.css
-├── script.js
-└── sites.json
+Website-Status-Checker/
+├── index.html          # صفحه اصلی
+├── sites.json          # لیست سایت‌ها
+├── assets/
+│   ├── css/
+│   │   └── style.css   # استایل‌ها
+│   └── js/
+│       └── app.js      # منطق بررسی وضعیت
+├── LICENSE
+└── README.md
 ```
+
+## تماس
+
+- تلگرام: [t.me/erffan_hub](https://t.me/erffan_hub)
+- ایکس: [@Erffanhub_00](https://x.com/Erffanhub_00)
+- گیت‌هاب: [erffanhub-00](https://github.com/erffanhub-00)
+
+## لایسنس
+
+MIT — فایل [LICENSE](LICENSE) را ببینید.
