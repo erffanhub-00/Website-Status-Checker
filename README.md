@@ -2,10 +2,7 @@
 
 A simple static page that checks whether websites are reachable, right from the browser — no server or backend needed. The site list lives in `sites.json`, and the page re-checks it every 30 seconds.
 
-یک صفحه استاتیک ساده برای بررسی لحظه‌ای در دسترس بودن سایت‌ها، بدون نیاز به سرور یا بک‌اند. لیست سایت‌ها در فایل `sites.json` نگه داشته می‌شود و صفحه هر ۳۰ ثانیه آن‌ها را بررسی می‌کند.
-
-[![CI](https://github.com/erffanhub-00/Website-Status-Checker/actions/workflows/ci.yml/badge.svg)](https://github.com/erffanhub-00/Website-Status-Checker/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/erffanhub-00/Website-Status-Checker/actions/workflows/ci.yml/badge.svg)](https://github.com/erffanhub-00/Website-Status-Checker/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Features
 
@@ -16,14 +13,6 @@ A simple static page that checks whether websites are reachable, right from the 
 - `sites.json` validation — invalid entries are skipped and a warning is shown
 - Dark theme, right-to-left layout, fully responsive
 
-### ویژگی‌ها
-
-- بررسی در دسترس بودن با متد `HEAD` و تایم‌اوت ۳ ثانیه
-- نمایش زمان پاسخ به میلی‌ثانیه با رنگ‌بندی
-- بروزرسانی خودکار هر ۳۰ ثانیه + دکمه بروزرسانی دستی
-- حالت «در حال بررسی» برای هر سایت و برای وضعیت کلی، بدون فلش «همه آفلاین» در لود اول
-- اعتبارسنجی `sites.json` — ورودی‌های نامعتبر نادیده گرفته می‌شوند و هشدارشان نمایش داده می‌شود
-- تم دارک، راست‌چین و کاملاً واکنش‌گرا
 
 ## Quickstart
 
@@ -46,9 +35,6 @@ Then open `http://localhost:8000` in your browser.
 
 To publish it online, enable GitHub Pages in the repository settings, on the `main` branch.
 
-### شروع سریع
-
-ریپو را کلون کنید و آن را با یک سرور HTTP سرو کنید (`file://` کار نمی‌کند). برای انتشار آنلاین، GitHub Pages را در تنظیمات ریپو روی شاخه `main` فعال کنید.
 
 ## Usage
 
@@ -69,9 +55,6 @@ Edit `sites.json`. Each entry needs a name and an `http` or `https` URL:
 
 An entry without a name, with an invalid URL, or with a protocol other than `http`/`https` is skipped, and the number of skipped entries is shown above the list.
 
-### نحوه استفاده
-
-برای هر سایت یک درخواست `HEAD` با `mode: 'no-cors'` فرستاده می‌شود؛ اگر سرور در سطح شبکه پاسخ بدهد، سایت «در دسترس» حساب می‌شود. یک محدودیت مهم: صفحه استاتیک نمی‌تواند کد وضعیت واقعی HTTP سایت دیگر را بخواند، چون پاسخ `no-cors` مبهم است — سایتی که 404 یا 500 برمی‌گرداند ولی سرورش بالا است، اینجا «در دسترس» دیده می‌شود. برای افزودن سایت، `sites.json` را ویرایش کنید؛ ورودی بدون نام یا با آدرس نامعتبر نادیده گرفته می‌شود.
 
 ## Project structure
 
@@ -100,15 +83,16 @@ python3 -m json.tool sites.json > /dev/null
 node --check assets/js/app.js
 ```
 
-### توسعه
+## فارسی | Persian
 
-ورک‌فلوی CI در `.github/workflows/ci.yml` با هر پوش و پول‌ریکوئست روی `main` اجرا می‌شود: `sites.json` را اعتبارسنجی می‌کند و سینتکس جاوااسکریپت را چک می‌کند. همین دو بررسی را می‌توانید لوکال هم اجرا کنید.
+یک صفحه استاتیک ساده برای بررسی لحظه‌ای در دسترس بودن سایت‌ها، بدون نیاز به سرور یا بک‌اند. لیست سایت‌ها در فایل `sites.json` نگه داشته می‌شود و صفحه هر ۳۰ ثانیه آن‌ها را بررسی می‌کند.
 
-## Contact
-
-- Telegram: [t.me/erffan_hub](https://t.me/erffan_hub)
-- X: [@Erffanhub_00](https://x.com/Erffanhub_00)
-- GitHub: [erffanhub-00](https://github.com/erffanhub-00)
+- بررسی با متد `HEAD` و تایم‌اوت ۳ ثانیه؛ زمان پاسخ به میلی‌ثانیه با رنگ‌بندی
+- بروزرسانی خودکار هر ۳۰ ثانیه + دکمه بروزرسانی دستی؛ حالت «در حال بررسی» بدون فلش «همه آفلاین» در لود اول
+- اعتبارسنجی `sites.json` — ورودی‌های نامعتبر نادیده گرفته می‌شوند و هشدارشان نمایش داده می‌شود
+- تم دارک، راست‌چین و کاملاً واکنش‌گرا
+- محدودیت صادقانه: صفحه استاتیک نمی‌تواند کد وضعیت واقعی HTTP سایت دیگر را بخواند، چون پاسخ `no-cors` مبهم است — سایتی که 404 یا 500 برمی‌گرداند ولی سرورش بالا است، اینجا «در دسترس» دیده می‌شود
+- اجرا فقط با یک سرور HTTP (مثل `python3 -m http.server 8000`)؛ برای انتشار آنلاین GitHub Pages را روی شاخه `main` فعال کنید
 
 ## License
 
